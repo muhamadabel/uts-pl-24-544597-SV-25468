@@ -16,3 +16,10 @@ frontend/dist/
 
 # Laporan build temp
 *.tmp
+
+# Laporan dan bukti lokal (diunggah terpisah ke Google Classroom)
+bukti/
+laporan/
+laporan-latex/
+*.py
+*.tex
