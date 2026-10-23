@@ -1,8 +1,14 @@
 {
 	"info": {
+<<<<<<< HEAD:postman/UTS_KEPL_544597_Product_API.postman_collection.json
 		"_postman_id": "c1f7b889-544597-4b72-91ef-productapi001",
 		"name": "UTS KEPL - Katalog Produk Toko API (544597)",
 		"description": "Postman Collection untuk Ujian Tengah Semester Konstruksi & Evolusi Perangkat Lunak.\nMahasiswa: Muhammad Abel Abhinaya Riananto (544597)\nTema: Sistem Manajemen Katalog Produk Toko",
+=======
+		"_postman_id": "c1f7b889-544597-4b72-91ef-gearsapi0001",
+		"name": "UTS KEPL - Gear Inventory API (544597)",
+		"description": "Postman Collection untuk Ujian Tengah Semester Konstruksi & Evolusi Perangkat Lunak.\nMahasiswa: Muhammad Abel Abhinaya Riananto (544597)\nTema: Sistem Inventaris Peralatan Produksi Multimedia & Laboratorium",
+>>>>>>> origin/main:postman/UTS_KEPL_Gear_API.postman_collection.json
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [

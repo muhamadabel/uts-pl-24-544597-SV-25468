@@ -85,10 +85,17 @@ def render_browser_mockup(title, url, out_name):
     # Web Header
     d.rectangle([0, bar_h, width, bar_h + 60], fill="#ffffff")
     d.line([0, bar_h + 60, width, bar_h + 60], fill="#e2e8f0", width=1)
+<<<<<<< HEAD
     d.rounded_rectangle([24, bar_h + 14, 135, bar_h + 46], radius=4, fill="#0f172a")
     d.text((34, bar_h + 22), "KATALOG TOKO", fill="#ffffff", font=font_ui)
     d.text((150, bar_h + 20), "Sistem Inventaris Produk (UTS KEPL 544597)", fill="#0f172a", font=font_h)
     d.text((width - 290, bar_h + 22), "Petugas: Muhammad Abel Abhinaya", fill="#475569", font=font_ui)
+=======
+    d.rounded_rectangle([24, bar_h + 14, 150, bar_h + 46], radius=4, fill="#0E0E12")
+    d.text((34, bar_h + 22), "GEAR SYSTEM", fill="#ffffff", font=font_ui)
+    d.text((165, bar_h + 20), "Equipment Management System (UTS KEPL 544597)", fill="#0E0E12", font=font_bold)
+    d.text((width - 240, bar_h + 22), "Masuk sebagai: Abel Producer", fill="#64748b", font=font_ui)
+>>>>>>> origin/main
 
     # Metric Cards
     y_metric = bar_h + 75

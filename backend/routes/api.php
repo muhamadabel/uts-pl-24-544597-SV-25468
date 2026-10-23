@@ -9,7 +9,11 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 | API Routes - UTS Konstruksi & Evolusi Perangkat Lunak
 | Mahasiswa: Muhammad Abel Abhinaya Riananto (544597)
+<<<<<<< HEAD
 | Tema: Sistem Manajemen Katalog Produk Toko
+=======
+| Tema: Sistem Inventaris Peralatan Produksi Multimedia & Laboratorium
+>>>>>>> origin/main
 |--------------------------------------------------------------------------
 */
 

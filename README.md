@@ -3,7 +3,11 @@
 **NIM:** 24/544597/SV/25468 (NIU: 544597)  
 **Program Studi:** D4 Teknologi Rekayasa Perangkat Lunak  
 **Departemen:** Teknik Elektro dan Informatika, Sekolah Vokasi, Universitas Gadjah Mada  
+<<<<<<< HEAD
 **Tema:** Sistem Manajemen Katalog Produk Toko
+=======
+**Tema:** Sistem Inventaris Peralatan Produksi Multimedia & Laboratorium
+>>>>>>> origin/main
 
 ---
 

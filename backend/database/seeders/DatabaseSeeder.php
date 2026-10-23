@@ -13,9 +13,15 @@ class DatabaseSeeder extends Seeder
     {
         // Pengguna admin untuk pengujian API dan login frontend
         User::firstOrCreate(
+<<<<<<< HEAD
             ['email' => 'admin@toko.local'],
             [
                 'name' => 'Muhammad Abel Abhinaya',
+=======
+            ['email' => 'admin@ugm.ac.id'],
+            [
+                'name' => 'Abel Administrator',
+>>>>>>> origin/main
                 'password' => Hash::make('password123'),
             ]
         );

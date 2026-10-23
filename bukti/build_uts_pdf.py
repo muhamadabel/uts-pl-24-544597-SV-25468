@@ -88,9 +88,15 @@ story += [
     Paragraph("1. Ringkasan Sistem dan Identitas Repositori", H1),
     Paragraph(
         "Laporan ini mendokumentasikan implementasi lengkap sistem perangkat lunak untuk Ujian Tengah Semester mata kuliah "
+<<<<<<< HEAD
         "Konstruksi dan Evolusi Perangkat Lunak (SVPL261501). Sistem yang dibangun mengadopsi tema <b>Sistem Manajemen Katalog Produk Toko</b> "
         "(entitas <code>Product</code>), yaitu platform inventaris ritel untuk mendata dan mengelola barang dagangan toko (pakaian, alas kaki, "
         "aksesoris, elektronik, dan perlengkapan). Tema ini orisinal dan bebas dari duplikasi tugas-tugas praktikum sebelumnya.",
+=======
+        "Konstruksi dan Evolusi Perangkat Lunak. Sistem yang dibangun mengadopsi tema <b>Production Gear &amp; Equipment Management "
+        "(Sistem Manajemen Inventaris Peralatan Produksi Multimedia)</b>, yaitu platform inventaris peralatan rekaman dan studio (kamera, lensa, pencahayaan, audio, dan stabilizer). "
+        "Tema ini orisinal dan berbeda dari tema tugas-tugas praktikum sebelumnya.",
+>>>>>>> origin/main
         BODY
     ),
     Spacer(1, 0.2 * cm),
