@@ -1,4 +1,4 @@
 NAME           IMAGE                    COMMAND                  SERVICE    CREATED         STATUS                   PORTS
-uts_backend    uts-p1-544597-backend    "docker-php-entrypoi…"   backend    9 minutes ago   Up 9 minutes (healthy)   0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
-uts_database   mysql:8.0                "docker-entrypoint.s…"   database   9 minutes ago   Up 9 minutes (healthy)   3306/tcp, 33060/tcp
-uts_frontend   uts-p1-544597-frontend   "/docker-entrypoint.…"   frontend   9 minutes ago   Up 9 minutes             0.0.0.0:3000->80/tcp, [::]:3000->80/tcp
+uts_backend    uts-p1-544597-backend    "/app/docker-entrypo…"   backend    2 minutes ago   Up 2 minutes (healthy)   0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
+uts_database   mysql:8.0                "docker-entrypoint.s…"   database   2 minutes ago   Up 2 minutes (healthy)   3306/tcp, 33060/tcp
+uts_frontend   uts-p1-544597-frontend   "/docker-entrypoint.…"   frontend   2 minutes ago   Up 2 minutes             0.0.0.0:3000->80/tcp, [::]:3000->80/tcp
