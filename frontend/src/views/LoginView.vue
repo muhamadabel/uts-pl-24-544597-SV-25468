@@ -2,9 +2,15 @@
   <div class="login-wrapper">
     <div class="login-card">
       <div class="brand-header">
+<<<<<<< HEAD
+        <div class="brand-badge">SISTEM TOKO</div>
+        <h2>Katalog Produk Toko</h2>
+        <p class="subtitle">UTS Konstruksi &amp; Evolusi Perangkat Lunak (544597)</p>
+=======
         <div class="brand-badge">GEAR INVENTORY</div>
         <h2>Equipment Management System</h2>
         <p class="subtitle">Sistem Inventaris Alat Produksi Multimedia (UTS KEPL 544597)</p>
+>>>>>>> origin/main
       </div>
 
       <form @submit.prevent="handleLogin" class="auth-form">
@@ -18,7 +24,7 @@
             id="email"
             v-model="email"
             type="email"
-            placeholder="admin@hongfilms.com"
+            placeholder="admin@toko.local"
             required
             autocomplete="email"
           />
@@ -37,9 +43,15 @@
         </div>
 
         <button type="submit" class="btn btn-primary" :disabled="loading">
-          {{ loading ? 'Memproses...' : 'Masuk' }}
+          {{ loading ? 'Memproses...' : 'Masuk ke Sistem' }}
         </button>
       </form>
+
+      <div class="demo-credentials">
+        <p class="demo-title">Kredensial Pengujian:</p>
+        <code>Email: admin@toko.local</code>
+        <code>Password: password123</code>
+      </div>
     </div>
   </div>
 </template>
@@ -50,7 +62,11 @@ import { useRouter } from 'vue-router';
 import apiClient from '../api/axios';
 
 const router = useRouter();
+<<<<<<< HEAD
+const email = ref('admin@toko.local');
+=======
 const email = ref('admin@ugm.ac.id');
+>>>>>>> origin/main
 const password = ref('password123');
 const errorMessage = ref('');
 const loading = ref(false);
@@ -67,7 +83,7 @@ const handleLogin = async () => {
     if (res.data && res.data.access_token) {
       // Simpan token ke localStorage (Soal 2a)
       localStorage.setItem('auth_token', res.data.access_token);
-      localStorage.setItem('user_name', res.data.user?.name || 'User');
+      localStorage.setItem('user_name', res.data.user?.name || 'Administrator');
       router.push('/');
     }
   } catch (err) {
@@ -98,7 +114,7 @@ const handleLogin = async () => {
   border-radius: 8px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-  padding: 2rem;
+  padding: 2.2rem;
 }
 
 .brand-header {
@@ -108,20 +124,21 @@ const handleLogin = async () => {
 
 .brand-badge {
   display: inline-block;
-  background: #0E0E12;
+  background: #0f172a;
   color: #ffffff;
   font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
-  padding: 0.25rem 0.6rem;
+  letter-spacing: 0.08em;
+  padding: 0.25rem 0.65rem;
   border-radius: 4px;
   margin-bottom: 0.75rem;
 }
 
 .brand-header h2 {
-  font-size: 1.3rem;
-  color: #0E0E12;
-  margin: 0 0 0.4rem 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.35rem 0;
 }
 
 .subtitle {
@@ -139,7 +156,7 @@ const handleLogin = async () => {
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.4rem;
   text-align: left;
 }
 
@@ -150,48 +167,77 @@ const handleLogin = async () => {
 }
 
 .form-group input {
-  padding: 0.65rem 0.85rem;
+  padding: 0.7rem 0.9rem;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s ease;
 }
 
 .form-group input:focus {
-  border-color: #E53935;
+  border-color: #0f172a;
 }
 
 .btn {
   padding: 0.75rem 1rem;
   border-radius: 6px;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 600;
   cursor: pointer;
   border: none;
-  transition: background 0.15s;
+  transition: all 0.15s ease;
 }
 
 .btn-primary {
-  background: #E53935;
+  background: #0f172a;
   color: #ffffff;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #c62828;
+  background: #1e293b;
 }
 
-.btn-primary:disabled {
-  opacity: 0.7;
+.btn:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
-.alert-error {
-  background: #fee2e2;
-  border: 1px solid #fca5a5;
-  color: #b91c1c;
-  padding: 0.65rem 0.85rem;
+.alert {
+  padding: 0.75rem 1rem;
   border-radius: 6px;
   font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.alert-error {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.demo-credentials {
+  margin-top: 1.6rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.demo-title {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+}
+
+.demo-credentials code {
+  font-size: 0.8rem;
+  background: #f1f5f9;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  color: #334155;
 }
 </style>

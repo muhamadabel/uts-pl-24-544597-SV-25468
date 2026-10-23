@@ -1,19 +1,25 @@
 {
 	"info": {
+<<<<<<< HEAD:postman/UTS_KEPL_544597_Product_API.postman_collection.json
+		"_postman_id": "c1f7b889-544597-4b72-91ef-productapi001",
+		"name": "UTS KEPL - Katalog Produk Toko API (544597)",
+		"description": "Postman Collection untuk Ujian Tengah Semester Konstruksi & Evolusi Perangkat Lunak.\nMahasiswa: Muhammad Abel Abhinaya Riananto (544597)\nTema: Sistem Manajemen Katalog Produk Toko",
+=======
 		"_postman_id": "c1f7b889-544597-4b72-91ef-gearsapi0001",
 		"name": "UTS KEPL - Gear Inventory API (544597)",
 		"description": "Postman Collection untuk Ujian Tengah Semester Konstruksi & Evolusi Perangkat Lunak.\nMahasiswa: Muhammad Abel Abhinaya Riananto (544597)\nTema: Sistem Inventaris Peralatan Produksi Multimedia & Laboratorium",
+>>>>>>> origin/main:postman/UTS_KEPL_Gear_API.postman_collection.json
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "01. Auth - Login Berhasil (Dapat Token)",
+			"name": "01. Auth - Login Berhasil (200 Token)",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Status code is 200 OK\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
 							"var jsonData = pm.response.json();",
@@ -39,7 +45,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\": \"admin@hongfilms.com\",\n    \"password\": \"password123\"\n}"
+					"raw": "{\n    \"email\": \"admin@toko.local\",\n    \"password\": \"password123\"\n}"
 				},
 				"url": {
 					"raw": "{{base_url}}/api/login",
@@ -83,7 +89,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\": \"invalid-email\",\n    \"password\": \"\"\n}"
+					"raw": "{\n    \"email\": \"invalid-email-format\",\n    \"password\": \"\"\n}"
 				},
 				"url": {
 					"raw": "{{base_url}}/api/login",
@@ -99,7 +105,7 @@
 			"response": []
 		},
 		{
-			"name": "03. Gears - Akses Tanpa Token (401 Unauthorized)",
+			"name": "03. Products - Akses Ditolak Tanpa Token (401)",
 			"event": [
 				{
 					"listen": "test",
@@ -122,66 +128,20 @@
 					}
 				],
 				"url": {
-					"raw": "{{base_url}}/api/gears",
+					"raw": "{{base_url}}/api/products",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"api",
-						"gears"
+						"products"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "04. Gears - Tampil Semua (200 OK)",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					}
-				],
-				"url": {
-					"raw": "{{base_url}}/api/gears",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"api",
-						"gears"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "05. Gears - Tambah Gear Baru (201 Created)",
+			"name": "04. Products - Tambah Produk Baru (201 Created)",
 			"event": [
 				{
 					"listen": "test",
@@ -190,9 +150,9 @@
 							"pm.test(\"Status code is 201 Created\", function () {",
 							"    pm.response.to.have.status(201);",
 							"});",
-							"var data = pm.response.json().data;",
-							"if (data && data.id) {",
-							"    pm.environment.set(\"gear_id\", data.id);",
+							"var jsonData = pm.response.json();",
+							"if (jsonData.data && jsonData.data.id) {",
+							"    pm.environment.set(\"product_id\", jsonData.data.id);",
 							"}"
 						],
 						"type": "text/javascript"
@@ -223,23 +183,23 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"ARRI Alexa Mini LF Cinema Camera\",\n    \"category\": \"Camera\",\n    \"serial_number\": \"CAM-ARRI-7701\",\n    \"daily_rate\": 2500000.00,\n    \"status\": \"available\"\n}"
+					"raw": "{\n    \"name\": \"Jaket Bomber Parasut Windbreaker\",\n    \"sku\": \"PRD-BMB-901\",\n    \"category\": \"Pakaian\",\n    \"price\": 275000.00,\n    \"stock\": 18,\n    \"status\": \"available\",\n    \"description\": \"Jaket parasut tahan angin dengan lapisan furing jaring nyaman.\"\n}"
 				},
 				"url": {
-					"raw": "{{base_url}}/api/gears",
+					"raw": "{{base_url}}/api/products",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"api",
-						"gears"
+						"products"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "06. Gears - Tambah Validasi Gagal (422)",
+			"name": "05. Products - Tambah Produk Validasi Gagal (422)",
 			"event": [
 				{
 					"listen": "test",
@@ -277,29 +237,29 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"\",\n    \"category\": \"\",\n    \"serial_number\": \"\",\n    \"daily_rate\": -100,\n    \"status\": \"rusak\"\n}"
+					"raw": "{\n    \"name\": \"\",\n    \"sku\": \"\",\n    \"category\": \"\",\n    \"price\": -500,\n    \"stock\": -2,\n    \"status\": \"invalid_status\"\n}"
 				},
 				"url": {
-					"raw": "{{base_url}}/api/gears",
+					"raw": "{{base_url}}/api/products",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"api",
-						"gears"
+						"products"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "07. Gears - Tampil Satu (200 OK)",
+			"name": "06. Products - Tampil Semua Produk (200)",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Status code is 200 OK\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});"
 						],
@@ -326,27 +286,73 @@
 					}
 				],
 				"url": {
-					"raw": "{{base_url}}/api/gears/{{gear_id}}",
+					"raw": "{{base_url}}/api/products",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"api",
-						"gears",
-						"{{gear_id}}"
+						"products"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "08. Gears - Ubah Data (200 OK)",
+			"name": "07. Products - Tampil Detail Satu Produk (200)",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Status code is 200 OK\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/products/{{product_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"products",
+						"{{product_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "08. Products - Ubah Data Produk (200)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});"
 						],
@@ -378,30 +384,30 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"status\": \"in_use\",\n    \"daily_rate\": 2800000.00\n}"
+					"raw": "{\n    \"stock\": 5,\n    \"status\": \"low_stock\"\n}"
 				},
 				"url": {
-					"raw": "{{base_url}}/api/gears/{{gear_id}}",
+					"raw": "{{base_url}}/api/products/{{product_id}}",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"api",
-						"gears",
-						"{{gear_id}}"
+						"products",
+						"{{product_id}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "09. Gears - Hapus Data (200 OK)",
+			"name": "09. Products - Hapus Produk (200)",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Status code is 200 OK\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});"
 						],
@@ -428,27 +434,27 @@
 					}
 				],
 				"url": {
-					"raw": "{{base_url}}/api/gears/{{gear_id}}",
+					"raw": "{{base_url}}/api/products/{{product_id}}",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"api",
-						"gears",
-						"{{gear_id}}"
+						"products",
+						"{{product_id}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "10. Auth - Logout (200 OK)",
+			"name": "10. Auth - Logout & Cabut Token (200)",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Status code is 200 OK\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});"
 						],
@@ -498,7 +504,7 @@
 			"value": ""
 		},
 		{
-			"key": "gear_id",
+			"key": "product_id",
 			"value": "1"
 		}
 	]

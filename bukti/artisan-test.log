@@ -1,22 +1,14 @@
-PHP Deprecated:  Constant PDO::MYSQL_ATTR_SSL_CA is deprecated since 8.5, use Pdo\Mysql::ATTR_SSL_CA instead in /Users/user/Documents/Kuliah/KEPL garap/uts-p1-544597/backend/vendor/laravel/framework/config/database.php on line 61
+   PASS  Tests\Feature\ProductApiTest
+  ✓ cannot access products without token returns 401                    0.05s  
+  ✓ user can login with valid credentials                               0.12s  
+  ✓ login validation failure returns 422                                0.02s  
+  ✓ can create product with valid token returns 201                     0.03s  
+  ✓ create product validation failure returns 422                       0.02s  
+  ✓ can list all products                                               0.02s  
+  ✓ can show single product                                             0.02s  
+  ✓ can update product                                                  0.02s  
+  ✓ can delete product                                                  0.02s  
+  ✓ user can logout and revoke token                                    0.02s  
 
-Deprecated: Constant PDO::MYSQL_ATTR_SSL_CA is deprecated since 8.5, use Pdo\Mysql::ATTR_SSL_CA instead in /Users/user/Documents/Kuliah/KEPL garap/uts-p1-544597/backend/vendor/laravel/framework/config/database.php on line 61
-PHP Deprecated:  Constant PDO::MYSQL_ATTR_SSL_CA is deprecated since 8.5, use Pdo\Mysql::ATTR_SSL_CA instead in /Users/user/Documents/Kuliah/KEPL garap/uts-p1-544597/backend/vendor/laravel/framework/config/database.php on line 81
-
-Deprecated: Constant PDO::MYSQL_ATTR_SSL_CA is deprecated since 8.5, use Pdo\Mysql::ATTR_SSL_CA instead in /Users/user/Documents/Kuliah/KEPL garap/uts-p1-544597/backend/vendor/laravel/framework/config/database.php on line 81
-
-   DEPR  Tests\Feature\GearApiTest
-  ! cannot access gears endpoint without token returns 401 → Constant P… 0.15s  
-  ! user can login with valid credentials → Constant PDO::MYSQL_ATTR_SS… 0.75s  
-  ! login validation failure returns 422 → Constant PDO::MYSQL_ATTR_SSL… 0.01s  
-  ! can create gear with valid token returns 201 → Constant PDO::MYSQL_… 0.01s  
-  ! create gear validation failure returns 422 → Constant PDO::MYSQL_ATTR_SSL_CA is deprecated since 8.5, use Pdo\Mysql::ATTR_SSL_CA instead // vendor/laravel/framework/config/database.php:61
-  ! can list all gears → Constant PDO::MYSQL_ATTR_SSL_CA is deprecated…  0.01s  
-  ! can show single gear → Constant PDO::MYSQL_ATTR_SSL_CA is deprecate… 0.01s  
-  ! can update gear → Constant PDO::MYSQL_ATTR_SSL_CA is deprecated sin… 0.01s  
-  ! can delete gear → Constant PDO::MYSQL_ATTR_SSL_CA is deprecated since 8.5, use Pdo\Mysql::ATTR_SSL_CA instead // vendor/laravel/framework/config/database.php:61
-  ! user can logout and revoke token → Constant PDO::MYSQL_ATTR_SSL_CA…  0.01s  
-
-  Tests:    10 deprecated (40 assertions)
-  Duration: 1.02s
-
+  Tests:    10 passed (41 assertions)
+  Duration: 0.36s

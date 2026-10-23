@@ -4,10 +4,10 @@ services:
     container_name: uts_database
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootsecret}
-      MYSQL_DATABASE: ${DB_DATABASE:-uts_geardb}
-      MYSQL_USER: ${DB_USERNAME:-gear_admin}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-gear_secret123}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rahasia_root_mysql}
+      MYSQL_DATABASE: ${DB_DATABASE:-uts_tokodb}
+      MYSQL_USER: ${DB_USERNAME:-toko_admin}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-toko_rahasia_password_123}
     volumes:
       - db_data:/var/lib/mysql
     networks:
@@ -22,11 +22,10 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-      network: host
     container_name: uts_backend
     restart: unless-stopped
     environment:
-      APP_NAME: "${APP_NAME:-UTS_Gear_Backend}"
+      APP_NAME: "${APP_NAME:-UTS_KatalogToko_Backend}"
       APP_ENV: "${APP_ENV:-production}"
       APP_KEY: "${APP_KEY}"
       APP_DEBUG: "${APP_DEBUG:-false}"
@@ -34,9 +33,9 @@ services:
       DB_CONNECTION: mysql
       DB_HOST: database
       DB_PORT: 3306
-      DB_DATABASE: ${DB_DATABASE:-uts_geardb}
-      DB_USERNAME: ${DB_USERNAME:-gear_admin}
-      DB_PASSWORD: ${DB_PASSWORD:-gear_secret123}
+      DB_DATABASE: ${DB_DATABASE:-uts_tokodb}
+      DB_USERNAME: ${DB_USERNAME:-toko_admin}
+      DB_PASSWORD: ${DB_PASSWORD:-toko_rahasia_password_123}
     ports:
       - "8000:8000"
     depends_on:
@@ -60,9 +59,9 @@ services:
 
 volumes:
   db_data:
-    name: uts_gear_db_data
+    name: uts_toko_db_data
 
 networks:
   uts_network:
-    name: uts_gear_network
+    name: uts_toko_network
     driver: bridge

@@ -3,7 +3,6 @@
 
 import json
 import pathlib
-import urllib.request
 from PIL import Image, ImageDraw, ImageFont
 
 BASE = pathlib.Path(__file__).parent
@@ -68,13 +67,13 @@ def render_terminal(title, text, out_name, font_size=14, pad=20, max_lines=None)
 
 def render_browser_mockup(title, url, out_name):
     width = 1100
-    height = 700
+    height = 720
     bar_h = 44
     img = Image.new("RGB", (width, height), "#f8fafc")
     d = ImageDraw.Draw(img)
     font_ui = load_font(13)
-    font_bold = load_font(15)
-    font_h = load_font(18)
+    font_bold = load_font(14)
+    font_h = load_font(16)
 
     # Address Bar
     d.rectangle([0, 0, width, bar_h], fill="#e2e8f0")
@@ -86,72 +85,86 @@ def render_browser_mockup(title, url, out_name):
     # Web Header
     d.rectangle([0, bar_h, width, bar_h + 60], fill="#ffffff")
     d.line([0, bar_h + 60, width, bar_h + 60], fill="#e2e8f0", width=1)
+<<<<<<< HEAD
+    d.rounded_rectangle([24, bar_h + 14, 135, bar_h + 46], radius=4, fill="#0f172a")
+    d.text((34, bar_h + 22), "KATALOG TOKO", fill="#ffffff", font=font_ui)
+    d.text((150, bar_h + 20), "Sistem Inventaris Produk (UTS KEPL 544597)", fill="#0f172a", font=font_h)
+    d.text((width - 290, bar_h + 22), "Petugas: Muhammad Abel Abhinaya", fill="#475569", font=font_ui)
+=======
     d.rounded_rectangle([24, bar_h + 14, 150, bar_h + 46], radius=4, fill="#0E0E12")
     d.text((34, bar_h + 22), "GEAR SYSTEM", fill="#ffffff", font=font_ui)
     d.text((165, bar_h + 20), "Equipment Management System (UTS KEPL 544597)", fill="#0E0E12", font=font_bold)
     d.text((width - 240, bar_h + 22), "Masuk sebagai: Abel Producer", fill="#64748b", font=font_ui)
+>>>>>>> origin/main
 
-    # Card Form
-    y = bar_h + 80
-    d.rounded_rectangle([24, y, width - 24, y + 130], radius=8, fill="#ffffff", outline="#e2e8f0")
-    d.text((40, y + 14), "Tambah Alat Produksi Baru", fill="#0E0E12", font=font_bold)
-    # Inputs preview
-    d.rounded_rectangle([40, y + 45, 260, y + 80], radius=6, fill="#ffffff", outline="#cbd5e1")
-    d.text((50, y + 54), "Sony FX3 Cinema Line", fill="#1e293b", font=font_ui)
-    d.rounded_rectangle([275, y + 45, 420, y + 80], radius=6, fill="#ffffff", outline="#cbd5e1")
-    d.text((285, y + 54), "Camera", fill="#1e293b", font=font_ui)
-    d.rounded_rectangle([435, y + 45, 610, y + 80], radius=6, fill="#ffffff", outline="#cbd5e1")
-    d.text((445, y + 54), "CAM-FX3-001", fill="#1e293b", font=font_ui)
-    d.rounded_rectangle([625, y + 45, 780, y + 80], radius=6, fill="#ffffff", outline="#cbd5e1")
-    d.text((635, y + 54), "Rp 850.000", fill="#1e293b", font=font_ui)
-    d.rounded_rectangle([795, y + 45, 930, y + 80], radius=6, fill="#ffffff", outline="#cbd5e1")
-    d.text((805, y + 54), "AVAILABLE", fill="#15803d", font=font_ui)
-    d.rounded_rectangle([945, y + 45, 1055, y + 80], radius=6, fill="#E53935")
-    d.text((965, y + 54), "Simpan", fill="#ffffff", font=font_ui)
+    # Metric Cards
+    y_metric = bar_h + 75
+    metrics = [
+        ("TOTAL PRODUK", "7"),
+        ("TOTAL UNIT STOK", "138"),
+        ("KATEGORI AKTIF", "5"),
+        ("NILAI INVENTARIS", "Rp 23.490.000"),
+    ]
+    card_w = (width - 48 - 36) // 4
+    for idx, (label, val) in enumerate(metrics):
+        mx = 24 + idx * (card_w + 12)
+        d.rounded_rectangle([mx, y_metric, mx + card_w, y_metric + 65], radius=6, fill="#ffffff", outline="#e2e8f0")
+        d.text((mx + 14, y_metric + 10), label, fill="#64748b", font=font_ui)
+        d.text((mx + 14, y_metric + 32), val, fill="#0f172a", font=font_h)
+
+    # Action bar
+    y_act = y_metric + 80
+    d.rounded_rectangle([24, y_act, 420, y_act + 36], radius=6, fill="#ffffff", outline="#cbd5e1")
+    d.text((36, y_act + 9), "Cari nama produk atau SKU...", fill="#94a3b8", font=font_ui)
+    d.rounded_rectangle([432, y_act, 580, y_act + 36], radius=6, fill="#ffffff", outline="#cbd5e1")
+    d.text((444, y_act + 9), "Semua Kategori", fill="#334155", font=font_ui)
+    d.rounded_rectangle([width - 180, y_act, width - 24, y_act + 36], radius=6, fill="#0f172a")
+    d.text((width - 165, y_act + 9), "+ Tambah Produk", fill="#ffffff", font=font_bold)
 
     # Card Table
-    y_table = y + 150
-    d.rounded_rectangle([24, y_table, width - 24, height - 30], radius=8, fill="#ffffff", outline="#e2e8f0")
-    d.text((40, y_table + 16), "Daftar Inventaris Gear (Live Database Container)", fill="#0E0E12", font=font_bold)
+    y_table = y_act + 50
+    d.rounded_rectangle([24, y_table, width - 24, height - 25], radius=8, fill="#ffffff", outline="#e2e8f0")
+    d.text((40, y_table + 14), "Daftar Produk Toko (Live MySQL Container via Nginx Reverse Proxy)", fill="#0f172a", font=font_bold)
 
     # Table Header
-    th_y = y_table + 50
-    d.rectangle([25, th_y, width - 25, th_y + 35], fill="#f8fafc")
-    d.text((45, th_y + 10), "ID", fill="#64748b", font=font_ui)
-    d.text((100, th_y + 10), "Nama Alat", fill="#64748b", font=font_ui)
-    d.text((380, th_y + 10), "Kategori", fill="#64748b", font=font_ui)
-    d.text((490, th_y + 10), "Nomor Seri", fill="#64748b", font=font_ui)
-    d.text((660, th_y + 10), "Tarif / Hari", fill="#64748b", font=font_ui)
-    d.text((820, th_y + 10), "Status", fill="#64748b", font=font_ui)
-    d.text((960, th_y + 10), "Aksi", fill="#64748b", font=font_ui)
+    th_y = y_table + 42
+    d.rectangle([25, th_y, width - 25, th_y + 32], fill="#f8fafc")
+    d.text((45, th_y + 8), "SKU", fill="#64748b", font=font_ui)
+    d.text((170, th_y + 8), "Nama Produk", fill="#64748b", font=font_ui)
+    d.text((450, th_y + 8), "Kategori", fill="#64748b", font=font_ui)
+    d.text((580, th_y + 8), "Harga Satuan", fill="#64748b", font=font_ui)
+    d.text((730, th_y + 8), "Stok", fill="#64748b", font=font_ui)
+    d.text((810, th_y + 8), "Status", fill="#64748b", font=font_ui)
+    d.text((950, th_y + 8), "Aksi", fill="#64748b", font=font_ui)
 
     # Sample Rows
     rows = [
-        ("#1", "Sony FX3 Cinema Line Full-Frame", "Camera", "CAM-FX3-001", "Rp 850.000", "AVAILABLE", "#15803d", "#dcfce7"),
-        ("#2", "Sony FE 24-70mm f/2.8 GM II", "Lens", "LNS-GM-002", "Rp 350.000", "IN USE", "#1d4ed8", "#dbeafe"),
-        ("#3", "Aputure LS 600d Pro Daylight LED", "Lighting", "LGT-600D-003", "Rp 500.000", "AVAILABLE", "#15803d", "#dcfce7"),
-        ("#4", "Sennheiser MKH 416 Shotgun Mic", "Audio", "AUD-416-004", "Rp 250.000", "MAINTENANCE", "#b45309", "#fef3c7"),
-        ("#5", "DJI RS 3 Pro Gimbal Stabilizer", "Stabilizer", "GMB-RS3-005", "Rp 300.000", "AVAILABLE", "#15803d", "#dcfce7"),
-        ("#6", "ARRI Alexa Mini LF Cinema Camera", "Camera", "CAM-ARRI-888", "Rp 2.500.000", "AVAILABLE", "#15803d", "#dcfce7"),
+        ("PRD-OXF-001", "Kemeja Oxford Katun Lengan Panjang", "Pakaian", "Rp 175.000", "35", "TERSEDIA", "#15803d", "#dcfce7"),
+        ("PRD-SNK-002", "Sepatu Sneakers Kanvas Klasik", "Alas Kaki", "Rp 289.000", "20", "TERSEDIA", "#15803d", "#dcfce7"),
+        ("PRD-BAG-003", "Tas Ransel Laptop Anti Air 20L", "Aksesoris", "Rp 345.000", "14", "TERSEDIA", "#15803d", "#dcfce7"),
+        ("PRD-AUD-004", "Earphone Wireless TWS Bass Pro", "Elektronik", "Rp 220.000", "4", "MENIPIS", "#b45309", "#fef3c7"),
+        ("PRD-TEE-005", "Kaos Polos Heavyweight Cotton 24s", "Pakaian", "Rp 85.000", "50", "TERSEDIA", "#15803d", "#dcfce7"),
+        ("PRD-WLT-006", "Dompet Kulit Bifold Minimalis", "Aksesoris", "Rp 125.000", "0", "HABIS", "#b91c1c", "#fee2e2"),
+        ("PRD-HAT-777", "Topi Baseball Katun Twill", "Aksesoris", "Rp 75.000", "15", "TERSEDIA", "#15803d", "#dcfce7"),
     ]
 
-    r_y = th_y + 35
+    r_y = th_y + 32
     for r in rows:
         d.line([25, r_y, width - 25, r_y], fill="#f1f5f9", width=1)
-        d.text((45, r_y + 12), r[0], fill="#64748b", font=font_ui)
-        d.text((100, r_y + 12), r[1], fill="#0E0E12", font=font_bold)
-        d.text((380, r_y + 12), r[2], fill="#475569", font=font_ui)
-        d.text((490, r_y + 12), r[3], fill="#0f172a", font=font_ui)
-        d.text((660, r_y + 12), r[4], fill="#1e293b", font=font_ui)
+        d.text((45, r_y + 10), r[0], fill="#0f172a", font=font_bold)
+        d.text((170, r_y + 10), r[1], fill="#1e293b", font=font_ui)
+        d.text((450, r_y + 10), r[2], fill="#475569", font=font_ui)
+        d.text((580, r_y + 10), r[3], fill="#0f172a", font=font_ui)
+        d.text((740, r_y + 10), r[4], fill="#0f172a", font=font_bold)
         # badge
-        d.rounded_rectangle([815, r_y + 8, 920, r_y + 32], radius=4, fill=r[7])
-        d.text((825, r_y + 11), r[5], fill=r[6], font=font_ui)
+        d.rounded_rectangle([805, r_y + 6, 895, r_y + 28], radius=4, fill=r[7])
+        d.text((815, r_y + 9), r[5], fill=r[6], font=font_ui)
         # action buttons
-        d.rounded_rectangle([950, r_y + 8, 995, r_y + 32], radius=4, fill="#eff6ff")
-        d.text((960, r_y + 11), "Edit", fill="#2563eb", font=font_ui)
-        d.rounded_rectangle([1005, r_y + 8, 1055, r_y + 32], radius=4, fill="#fef2f2")
-        d.text((1015, r_y + 11), "Hapus", fill="#dc2626", font=font_ui)
-        r_y += 42
+        d.rounded_rectangle([940, r_y + 6, 985, r_y + 28], radius=4, fill="#eff6ff")
+        d.text((950, r_y + 9), "Ubah", fill="#2563eb", font=font_ui)
+        d.rounded_rectangle([995, r_y + 6, 1045, r_y + 28], radius=4, fill="#fef2f2")
+        d.text((1005, r_y + 9), "Hapus", fill="#dc2626", font=font_ui)
+        r_y += 37
 
     img.save(BASE / out_name)
     print(f"Generated: {out_name}")
