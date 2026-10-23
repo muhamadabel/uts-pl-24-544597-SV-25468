@@ -26,14 +26,15 @@ COPY . .
 # Generate autoloader teroptimasi setelah kode aplikasi ada
 RUN composer dump-autoload --optimize
 
-# Konfigurasi permission storage dan cache Laravel
+# Konfigurasi permission storage, cache, dan entrypoint script
 RUN chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache
+    && chmod -R 775 storage bootstrap/cache \
+    && chmod +x /app/docker-entrypoint.sh
 
 # Atur variabel lingkungan FrankenPHP agar melayani port 8000
 ENV SERVER_NAME=":8000"
 
 EXPOSE 8000
 
-# Server aplikasi dijalankan memakai FrankenPHP (Soal 7)
-CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
+# Server aplikasi dijalankan memakai FrankenPHP via entrypoint script (Soal 7)
+ENTRYPOINT ["/app/docker-entrypoint.sh"]

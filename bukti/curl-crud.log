@@ -1,33 +1,44 @@
-$ curl -i http://localhost:8000/api/gears
+$ curl -i http://localhost:8000/api/products
 HTTP/1.1 401 Unauthorized
 {"status":"error","message":"Unauthenticated. Token tidak ditemukan atau tidak valid."}
 
-$ curl -X POST http://localhost:8000/api/login -d '{"email":"admin@hongfilms.com",...}'
+$ curl -X POST http://localhost:8000/api/login -d '{"email":"admin@toko.local",...}'
 HTTP/1.1 200 OK
 {
   "message": "Login berhasil",
-  "access_token": "2|dKvxo9xrj8DufDzCNatnFCokUT8EBQ4dr2MOzlNQaf598a9f",
+  "access_token": "1|6HNeKuSIj4ZAqf8ySjEynlh0WvNeT2xJIH6aaDvH57e92de7",
   "token_type": "Bearer",
   "user": {
     "id": 1,
-    "name": "Abel Producer",
-    "email": "admin@hongfilms.com"
+    "name": "Muhammad Abel Abhinaya",
+    "email": "admin@toko.local"
   }
 }
 
-$ curl -X POST http://localhost:8000/api/gears -H 'Authorization: Bearer <token>' -d '...'
+$ curl -X POST http://localhost:8000/api/products -H "Authorization: Bearer ***" -d '{"name":"","price":-10}'
+HTTP/1.1 422 Unprocessable Content
+{
+  "message": "The name field is required. (and 5 more errors)",
+  "errors": {
+    "name": ["The name field is required."],
+    "price": ["The price field must be at least 0."]
+  }
+}
+
+$ curl -X POST http://localhost:8000/api/products -H 'Authorization: Bearer ***' -d '...'
 HTTP/1.1 201 Created
 {
   "status": "success",
-  "message": "Data gear berhasil dibuat.",
+  "message": "Produk berhasil ditambahkan.",
   "data": {
-    "name": "RED Komodo 6K Cinema Camera",
-    "category": "Camera",
-    "serial_number": "CAM-KOMODO-99",
-    "daily_rate": "1500000.00",
+    "name": "Topi Baseball Katun Twill",
+    "category": "Aksesoris",
+    "sku": "PRD-HAT-777",
+    "price": "75000.00",
+    "stock": 15,
     "status": "available",
-    "updated_at": "2026-10-15T14:26:54.000000Z",
-    "created_at": "2026-10-15T14:26:54.000000Z",
+    "updated_at": "2026-10-23T11:05:08.000000Z",
+    "created_at": "2026-10-23T11:05:08.000000Z",
     "id": 7
   }
 }
