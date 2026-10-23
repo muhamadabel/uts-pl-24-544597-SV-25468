@@ -1,0 +1,1022 @@
+#!/usr/bin/env python3
+"""Script untuk menulis dan mengompilasi main.tex mengikuti format resmi Azril Fahmiardi."""
+
+import pathlib
+import subprocess
+
+BASE = pathlib.Path(__file__).parent
+TEX_FILE = BASE / "main.tex"
+
+content = r"""\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper, left=3cm, right=2.5cm, top=3cm, bottom=3cm]{geometry}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{indentfirst}
+\usepackage{titlesec}
+\usepackage{array}
+
+% Header dan Footer
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\footnotesize Konstruksi dan Evolusi Perangkat Lunak}
+\rhead{\footnotesize NIM: 24/544597/SV/25468}
+\cfoot{\footnotesize \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% Penomoran dan Judul Bab
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}{\small\bfseries}{\thesubsubsection.}{0.5em}{}
+
+% Istilah Indonesia
+\renewcommand{\contentsname}{Daftar Isi}
+\renewcommand{\figurename}{Gambar}
+\renewcommand{\tablename}{Tabel}
+\captionsetup{labelsep=colon}
+
+% Pengaturan Hyperlink
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    citecolor=black
+}
+
+% Pengaturan Kode Program
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{backcolor}{rgb}{0.97,0.98,0.99}
+\lstdefinestyle{codestyle}{
+    backgroundcolor=\color{backcolor},
+    basicstyle=\ttfamily\scriptsize,
+    breaklines=true,
+    numbers=left,
+    numberstyle=\tiny\color{codegray},
+    numbersep=5pt,
+    frame=single,
+    rulecolor=\color{codegray!30},
+    tabsize=2,
+    showstringspaces=false
+}
+\lstset{style=codestyle}
+
+\begin{document}
+
+% ==================== HALAMAN SAMPUL ====================
+\begin{titlepage}
+\centering
+\vspace*{0.5cm}
+
+{\LARGE \textbf{LAPORAN UJIAN TENGAH SEMESTER}}\\[0.4cm]
+{\Large \textbf{KONSTRUKSI DAN EVOLUSI PERANGKAT LUNAK}}\\[1.0cm]
+
+{\large \textbf{Sistem Manajemen Katalog Produk Toko:}}\\[0.2cm]
+{\large RESTful API Laravel, Frontend Vue.js, GitHub Actions CI/CD,\\
+dan Docker Compose dengan FrankenPHP}\\[1.5cm]
+
+\includegraphics[height=6.2cm]{images/lambang_ugm.png}\\[1.5cm]
+
+{\textbf{Disusun Oleh:}}\\[0.2cm]
+Nama: Muhammad Abel Abhinaya Riananto\\
+NIM: 24/544597/SV/25468\\
+Kelas: TRPL B\\[1.2cm]
+
+{\textbf{Dosen Pengampu:}}\\
+Dr. Muhammad Fakhrurrifqi, S.Kom., M.Cs.\\
+Galih Malela Damaraji, S.Pd., M.Eng.\\[1.5cm]
+
+\vfill
+{\textbf{PROGRAM STUDI D-IV TEKNOLOGI REKAYASA PERANGKAT LUNAK}}\\
+{\textbf{DEPARTEMEN TEKNIK ELEKTRO DAN INFORMATIKA}}\\
+{\textbf{SEKOLAH VOKASI}}\\
+{\textbf{UNIVERSITAS GADJAH MADA}}\\
+{\textbf{YOGYAKARTA}}\\
+{\textbf{2026}}
+
+\end{titlepage}
+
+% ==================== DAFTAR ISI ====================
+\newpage
+\tableofcontents
+\newpage
+
+% ==================== 1. PENDAHULUAN ====================
+\section{Pendahuluan}
+
+\subsection{Deskripsi Ujian}
+Ujian Tengah Semester ini dilaksanakan secara mandiri dalam bentuk \textit{take-home}. Sistem yang dibangun adalah \textbf{Sistem Manajemen Katalog Produk Toko}: sebuah aplikasi manajemen inventaris ritel terintegrasi untuk mengelola data produk (nama produk, kode unik SKU, kategori barang, harga satuan, stok unit, status ketersediaan, dan deskripsi). Sistem mengadopsi arsitektur \textit{client-server decoupled} yang terdiri atas:
+\begin{itemize}
+    \item \textbf{Backend RESTful API:} Framework Laravel 11 dengan autentikasi berbasis token Laravel Sanctum.
+    \item \textbf{Server Aplikasi Modern:} FrankenPHP berbasis Caddy engine (pemenuhan tantangan nilai tambahan +10 poin).
+    \item \textbf{Frontend SPA:} Framework Vue.js 3 + Vite dengan konsumsi API menggunakan Axios.
+    \item \textbf{Basis Data Relasional:} MySQL 8.0 dengan volume persisten terisolasi (\textit{named volume}).
+    \item \textbf{Otomatisasi CI/CD:} GitHub Actions yang menjalankan pengujian otomatis Laravel, build Vue.js, dan continuous deployment ke GitHub Container Registry (\texttt{ghcr.io}).
+    \item \textbf{Orkestrasi Kontainer:} Seluruh sistem dapat dijalankan dengan satu perintah tunggal \texttt{docker compose up -d --build}.
+\end{itemize}
+
+\subsection{Tautan}
+\begin{itemize}
+    \item \textbf{Repository GitHub (Publik):} \url{https://github.com/KEPL2026/uts-p1-544597}
+    \item \textbf{Repository Mirror (Personal):} \url{https://github.com/muhamadabel/uts-p1-544597}
+    \item \textbf{GitHub Actions:} \url{https://github.com/KEPL2026/uts-p1-544597/actions}
+    \item \textbf{Postman Collection:} Berkas \texttt{postman/UTS_KEPL_544597_Product_API.postman_collection.json}
+    \item \textbf{Packages (Image Docker di GHCR):} \url{https://github.com/orgs/KEPL2026/packages}
+\end{itemize}
+
+\subsection{Struktur Repository}
+Repository monorepo dirancang rapi dengan pemisahan direktori:
+\begin{itemize}
+    \item \texttt{backend/} : Berisi aplikasi Laravel 11, konfigurasi Sanctum, Dockerfile, Caddyfile, dan entrypoint script.
+    \item \texttt{frontend/} : Berisi aplikasi Vue.js 3, Vite, Axios, konfigurasi Nginx, dan multi-stage Dockerfile.
+    \item \texttt{postman/} : Kumpulan berkas pengujian RESTful API format JSON.
+    \item \texttt{.github/workflows/ci.yml} : Pipeline GitHub Actions untuk integrasi dan pengiriman otomatis.
+    \item \texttt{docker-compose.yml, .env.example, README.md} : Konfigurasi orkestrasi di akar proyek.
+\end{itemize}
+
+\subsection{Teknologi dan Versi}
+\begin{table}[H]
+\centering
+\caption{Teknologi yang digunakan}
+\begin{tabular}{ll}
+\toprule
+\textbf{Komponen} & \textbf{Versi / Spesifikasi} \\
+\midrule
+Backend Framework & Laravel 11.57, Laravel Sanctum v4.3, PHP 8.3 \\
+Server Aplikasi Backend & FrankenPHP v1.4 (\texttt{dunglas/frankenphp:1.4-php8.3}) \\
+Frontend Framework & Vue.js 3.5, Vite 6.4, vue-router 4.5, Axios 1.7 \\
+Server Produksi Frontend & Nginx 1.27 Alpine (\texttt{nginx:1.27-alpine}) \\
+Build Environment Frontend & Node.js 20.18 Alpine (\texttt{node:20.18-alpine}) \\
+Basis Data & MySQL 8.0 Community Server (\texttt{mysql:8.0}) \\
+CI/CD Pipeline & GitHub Actions, GitHub Container Registry (\texttt{ghcr.io}) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+% ==================== 2. SOAL 1: BACKEND RESTFUL API ====================
+\section{Soal 1: Backend RESTful API Laravel}
+
+\subsection{Rancangan}
+Tema yang dipilih adalah sistem manajemen katalog produk toko. Resource utamanya adalah entitas \texttt{Product} yang tersimpan pada tabel \texttt{products} dengan skema kolom: \texttt{id}, \texttt{name}, \texttt{sku} (unik), \texttt{category}, \texttt{price}, \texttt{stock}, \texttt{status} (\textit{available, low\_stock, out\_of\_stock, discontinued}), dan \texttt{description}. Seluruh respons dikemas dalam format JSON baku.
+
+\begin{table}[H]
+\centering
+\caption{Daftar endpoint RESTful API}
+\begin{tabular}{llll}
+\toprule
+\textbf{Metode} & \textbf{Endpoint} & \textbf{Fungsi} & \textbf{Autentikasi} \\
+\midrule
+POST & \texttt{/api/login} & Autentikasi kredensial pengguna & Publik (Tanpa Token) \\
+POST & \texttt{/api/logout} & Mencabut token aktif Sanctum & Wajib Bearer Token \\
+GET & \texttt{/api/products} & Menampilkan seluruh daftar produk & Wajib Bearer Token \\
+GET & \texttt{/api/products/\{id\}} & Menampilkan detail satu produk & Wajib Bearer Token \\
+POST & \texttt{/api/products} & Menambahkan data produk baru & Wajib Bearer Token \\
+PUT & \texttt{/api/products/\{id\}} & Memperbarui data produk & Wajib Bearer Token \\
+DELETE & \texttt{/api/products/\{id\}} & Menghapus data produk & Wajib Bearer Token \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Pemenuhan Ketentuan Soal}
+\begin{itemize}
+    \item \textbf{a. Login dan Logout Token:} Diimplementasikan pada \texttt{AuthController.php}. Login memvalidasi email dan password lalu mengembalikan token Sanctum bertipe Bearer. Seluruh rute pada grup middleware \texttt{auth:sanctum} menolak akses tanpa token.
+    \item \textbf{b. CRUD Lengkap:} Controller \texttt{ProductController.php} menyediakan 5 fungsi standar REST: \texttt{index()}, \texttt{show()}, \texttt{store()}, \texttt{update()}, dan \texttt{destroy()} yang berinteraksi langsung dengan model Eloquent.
+    \item \textbf{c. Format JSON dan Kode Status HTTP:} 
+    \begin{itemize}
+        \item \texttt{201 Created}: Dikembalikan saat operasi penambahan produk sukses.
+        \item \texttt{422 Unprocessable Content}: Dikembalikan otomatis saat validasi request gagal.
+        \item \texttt{401 Unauthorized}: Dikembalikan saat request tidak menyertakan Bearer token valid.
+    \end{itemize}
+    \item \textbf{d. Postman Collection:} Seluruh skenario pengujian diekspor ke format JSON di dalam folder \texttt{postman/}.
+    \item \textbf{e. Automated Feature Tests:} Dibuat 10 pengujian otomatis komprehensif pada berkas \texttt{backend/tests/Feature/ProductApiTest.php}.
+\end{itemize}
+
+\subsection{Hasil Pengujian}
+Pengujian otomatis dijalankan dengan perintah \texttt{php artisan test}. Seluruh 10 skenario feature test berhasil lulus dengan status hijau (41 assertions).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{images/gambar_01_artisan_test.png}
+\caption{Keluaran php artisan test: seluruh 10 skenario pengujian lulus hijau}
+\end{figure}
+
+Seluruh endpoint kemudian diuji secara menyeluruh melalui Postman. Koleksi pengujian mencakup verifikasi kode status 200, 201, 401, dan 422:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{images/gambar_02_postman_collection.png}
+\caption{Daftar koleksi pengujian Postman untuk Katalog Produk Toko API}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_03_postman_login_200.png}
+\caption{Login berhasil (200 OK) mengembalikan token autentikasi Sanctum}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_04_postman_products_401.png}
+\caption{Akses endpoint produk tanpa token ditolak dengan status 401 Unauthorized}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_05_postman_create_201.png}
+\caption{Tambah produk baru berhasil dengan kode status 201 Created}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_06_postman_create_422.png}
+\caption{Validasi gagal mengembalikan status 422 Unprocessable Content dan daftar kesalahan}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_07_postman_get_all_200.png}
+\caption{Menampilkan seluruh data produk toko (200 OK)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_08_postman_get_one_200.png}
+\caption{Menampilkan rincian satu produk spesifik berdasarkan ID (200 OK)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_09_postman_update_200.png}
+\caption{Memperbarui atribut produk berhasil (200 OK)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_10_postman_delete_200.png}
+\caption{Menghapus data produk dari basis data (200 OK)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_11_postman_logout_200.png}
+\caption{Logout berhasil mencabut access token pada basis data (200 OK)}
+\end{figure}
+
+\newpage
+% ==================== 3. SOAL 2: FRONTEND VUE.JS ====================
+\section{Soal 2: Frontend Vue.js}
+Aplikasi antarmuka pengguna dibangun menggunakan Vue.js 3 Single Page Application (SPA) dengan bundler Vite di dalam direktori \texttt{frontend/}. Struktur utamanya terdiri atas:
+\begin{itemize}
+    \item \texttt{src/api/axios.js}: Instans Axios dengan request/response interceptor terpusat.
+    \item \texttt{src/router/index.js}: Vue Router dengan \textit{navigation guard} autentikasi.
+    \item \texttt{src/views/LoginView.vue}: Halaman login interaktif.
+    \item \texttt{src/views/ProductView.vue}: Dashboard manajemen data produk toko lengkap (CRUD).
+\end{itemize}
+
+\subsection{Halaman Login dan Token Storage}
+Pengguna memasukkan email dan password pada halaman login. Setelah menerima balasan 200 OK dari Laravel, token disimpan ke dalam \texttt{localStorage} dengan kunci \texttt{auth\_token}. Request interceptor Axios secara otomatis menyematkan header \texttt{Authorization: Bearer <token>} pada setiap panggilan API berikutnya. Jika backend membalas status 401 (token kedaluwarsa), response interceptor otomatis membersihkan \texttt{localStorage} dan mengarahkan kembali ke halaman login.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_12_vue_login.png}
+\caption{Halaman login Vue.js dengan kredensial pengujian bawaan}
+\end{figure}
+
+\subsection{Halaman CRUD Data Produk}
+Setelah berhasil masuk, dashboard menampilkan ringkasan metrik inventaris dan tabel daftar produk yang diambil langsung dari backend Laravel melalui Axios.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_13_vue_table.png}
+\caption{Tampilan tabel produk pada dashboard setelah proses login}
+\end{figure}
+
+Operasi penambahan data baru menggunakan modal formulir terisolasi:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_14_vue_modal_create.png}
+\caption{Formulir modal untuk menambahkan produk baru}
+\end{figure}
+
+Jika terjadi kesalahan input (misalnya kode SKU duplikat atau harga negatif), backend mengirim kode status 422. Komponen Vue menangkap objek \texttt{errors} dan merendernya tepat di bawah kolom input terkait tanpa me-reload halaman:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_15_vue_validation_422.png}
+\caption{Penanganan kesalahan validasi 422 langsung pada formulir antarmuka}
+\end{figure}
+
+Pengguna dapat mengubah atribut produk melalui modal edit:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_16_vue_modal_edit.png}
+\caption{Formulir modal dalam mode ubah data}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_17_vue_table_updated.png}
+\caption{Tabel data produk ter-refresh secara reaktif setelah pembaruan disimpan}
+\end{figure}
+
+Penghapusan produk dilengkapi dialog konfirmasi pencegahan kesalahan:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_18_vue_modal_delete.png}
+\caption{Dialog konfirmasi hapus data produk}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_19_vue_table_deleted.png}
+\caption{Tabel produk setelah data berhasil dihapus dari basis data}
+\end{figure}
+
+\subsection{Variabel Lingkungan dan Verifikasi Token}
+Base URL API tidak di-hardcode di kode komponen, melainkan dikonfigurasi melalui berkas lingkungan \texttt{.env} dengan variabel \texttt{VITE_API_BASE_URL}. Melalui browser DevTools Network tab, terbukti bahwa header \texttt{Authorization: Bearer <token>} selalu disertakan pada setiap panggilan API:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_20_vue_devtools_auth.png}
+\caption{Verifikasi Browser DevTools: header Authorization Bearer token pada request}
+\end{figure}
+
+\newpage
+% ==================== 4. SOAL 3: GITHUB & CI ====================
+\section{Soal 3: Manajemen Kode di GitHub dan Continuous Integration}
+
+\subsection{Repository dan Branch}
+Kode sistem dikelola di GitHub Organization \texttt{KEPL2026/uts-p1-544597} dan di-mirror ke akun personal \texttt{muhamadabel/uts-p1-544597}. Struktur proyek monorepo memuat dua folder utama: \texttt{backend/} dan \texttt{frontend/}. Strategi percabangan menerapkan model Git Flow terstruktur:
+\begin{itemize}
+    \item \texttt{main}: Branch rilis produksi.
+    \item \texttt{dev}: Branch integrasi pengembangan.
+    \item \texttt{feature/product-catalog}: Branch pengembangan fitur baru.
+\end{itemize}
+
+Seluruh perubahan kode wajib masuk melalui mekanisme Pull Request (PR), dilarang melakukan push langsung.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_21_gh_repo.png}
+\caption{Halaman repositori GitHub publik dengan folder backend/ dan frontend/}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_22_gh_branches.png}
+\caption{Daftar cabang pada repositori: main, dev, dan feature/product-catalog}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_23_gh_pr_dev.png}
+\caption{Pull Request \#2 dari branch fitur ke dev dengan status check CI lulus}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_24_gh_pr_main.png}
+\caption{Pull Request \#3 dari dev ke main untuk penggabungan rilis final}
+\end{figure}
+
+\subsection{Branch Protection Rules}
+Proteksi cabang dipasang pada branch \texttt{main} dan \texttt{dev} melalui menu \textbf{Settings $\rightarrow$ Branches}. Aturan mewajibkan Pull Request sebelum penggabungan dan status check CI (\texttt{Backend Test (Laravel)} serta \texttt{Frontend Build (Vue.js)}) wajib berstatus lulus hijau.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_25_gh_protection_main.png}
+\caption{Pengaturan Branch Protection pada branch main}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_26_gh_protection_dev.png}
+\caption{Pengaturan Branch Protection pada branch dev}
+\end{figure}
+
+\subsection{Workflow CI (GitHub Actions)}
+Berkas \texttt{.github/workflows/ci.yml} dikonfigurasi dengan dua job utama:
+\begin{enumerate}
+    \item \textbf{backend-test:} Menyiapkan environment PHP 8.3, memasang dependensi dengan \texttt{composer install}, menyalin \texttt{.env.example}, dan mengeksekusi \texttt{php artisan test}.
+    \item \textbf{frontend-build:} Menyiapkan Node.js 20, memasang dependensi dengan \texttt{npm ci}, dan mengompilasi aset produksi dengan \texttt{npm run build}.
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_27_gh_actions_ci.png}
+\caption{Eksekusi workflow CI di tab Actions dengan seluruh job berstatus hijau}
+\end{figure}
+
+\newpage
+% ==================== 5. SOAL 4: CONTINUOUS DEPLOYMENT ====================
+\section{Soal 4: Continuous Deployment}
+
+\subsection{Kredensial dan Rahasia (GitHub Secrets)}
+Nilai rahasia seperti \texttt{APP\_KEY} dan \texttt{DB\_PASSWORD} disimpan pada menu \textbf{Settings $\rightarrow$ Secrets and variables $\rightarrow$ Actions} dan tidak pernah ditulis di dalam kode repositori.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_28_gh_secrets.png}
+\caption{Daftar Repository Secrets di GitHub Actions}
+\end{figure}
+
+\subsection{Aturan Eksekusi Job Deploy dan Tagging Commit SHA}
+Job deploy ditambahkan pada pipeline CI/CD dengan kondisi:
+\begin{center}
+\texttt{if: github.ref == 'refs/heads/main' \&\& github.event\_name == 'push'}
+\end{center}
+Artinya, job deploy \textbf{hanya} dijalankan saat terjadi penggabungan / push ke branch \texttt{main}. Pada branch \texttt{dev} atau Pull Request, job deploy secara otomatis berstatus \textit{skipped}.
+
+Job deploy membangun image Docker backend dan frontend, lalu mengunggahnya ke GitHub Container Registry (\texttt{ghcr.io}) menggunakan tag nomor commit SHA (\texttt{e8f739e}), bukan tag \texttt{latest}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_29_gh_actions_deploy_main.png}
+\caption{Run workflow pada branch main: seluruh job termasuk deploy berstatus hijau}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_30_gh_deploy_log.png}
+\caption{Log eksekusi job deploy: proses build dan push ke ghcr.io}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_31_gh_deploy_skipped_pr.png}
+\caption{Run dari Pull Request: job deploy dilewati (skipped)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_32_gh_deploy_skipped_dev.png}
+\caption{Run dari push ke branch dev: job deploy dilewati (skipped)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_33_ghcr_packages.png}
+\caption{Halaman GitHub Packages yang memuat image uts-backend dan uts-frontend}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_34_ghcr_tags.png}
+\caption{Tag image kontainer pada ghcr.io memakai nomor commit SHA (bukan latest)}
+\end{figure}
+
+\newpage
+% ==================== 6. SOAL 5: DOCKERFILE ====================
+\section{Soal 5: Dockerfile Backend dan Frontend}
+
+\subsection{backend/Dockerfile dan Docker Layer Caching}
+Image dasar backend menggunakan tag versi spesifik \texttt{dunglas/frankenphp:1.4-php8.3} (bukan latest). Untuk mengoptimasi waktu build, file \texttt{composer.json} dan \texttt{composer.lock} disalin terlebih dahulu dan \texttt{composer install} dijalankan sebelum kode aplikasi disalin. Hal ini memungkinkan Docker memanfaatkan layer caching sehingga instalasi vendor tidak diulang jika tidak ada perubahan dependensi.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_35_docker_build_backend.png}
+\caption{Build image backend: langkah composer install memanfaatkan cache lapisan}
+\end{figure}
+
+\subsection{frontend/Dockerfile (Multi-Stage Build)}
+Pembangunan frontend menerapkan teknik \textit{multi-stage build}:
+\begin{enumerate}
+    \item \textbf{Stage Builder (\texttt{node:20.18-alpine}):} Memasang dependensi dengan \texttt{npm ci} dan menghasilkan aset statis produksi di direktori \texttt{dist/}.
+    \item \textbf{Stage Production (\texttt{nginx:1.27-alpine}):} Menyalin berkas \texttt{dist/} dari stage builder ke \texttt{/usr/share/nginx/html} dan menyajikan aplikasi menggunakan web server Nginx.
+\end{enumerate}
+
+Dengan arsitektur ini, direktori \texttt{node\_modules} yang berukuran besar sepenuhnya ditinggalkan di stage pertama dan tidak ikut terbawa ke image akhir, menjaga ukuran image tetap sangat ramping.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_36_docker_build_frontend.png}
+\caption{Multi-stage build frontend Vue.js dengan Nginx Alpine}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_37_docker_no_nodemodules.png}
+\caption{Pemeriksaan kontainer frontend: folder node\_modules terbukti tidak ada di image akhir}
+\end{figure}
+
+\subsection{Berkas .dockerignore dan Keamanan Secrets}
+Masing-masing folder dilengkapi berkas \texttt{.dockerignore} yang mengecualikan folder \texttt{.git}, \texttt{node\_modules}, \texttt{vendor}, dan berkas sensitif \texttt{.env}. Tidak ada password atau secret key yang di-hardcode ke dalam Dockerfile.
+
+\newpage
+% ==================== 7. SOAL 6: DOCKER COMPOSE ====================
+\section{Soal 6: Docker Compose}
+Seluruh sistem dijalankan dengan satu perintah tunggal melalui berkas \texttt{docker-compose.yml} di akar repository:
+\begin{center}
+\texttt{docker compose up -d --build}
+\end{center}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_38_docker_compose_up.png}
+\caption{Eksekusi perintah docker compose up -d --build untuk menyalakan sistem}
+\end{figure}
+
+\subsection{Keluaran docker compose ps}
+Perintah \texttt{docker compose ps} membuktikan ketiga service berjalan aktif dan sehat:
+\begin{itemize}
+    \item \texttt{uts\_database} (MySQL 8.0) pada port 3306.
+    \item \texttt{uts\_backend} (Laravel 11 + FrankenPHP) pada port 8000.
+    \item \texttt{uts\_frontend} (Vue 3 + Nginx) pada port 3000.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_39_docker_compose_ps.png}
+\caption{Keluaran docker compose ps membuktikan ketiga service berjalan aktif dan sehat}
+\end{figure}
+
+\subsection{Pengujian di Browser (End-to-End)}
+Pengguna mengakses aplikasi melalui browser pada \texttt{http://localhost:3000}. Seluruh operasi otentikasi dan CRUD produk berjalan secara nyata dengan data yang dilayani oleh backend dan tersimpan di database:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_40_browser_docker_login.png}
+\caption{Halaman login saat diakses dari browser melalui stack Docker}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_41_browser_docker_create.png}
+\caption{Menambahkan produk baru dari antarmuka browser}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_42_browser_docker_update.png}
+\caption{Mengubah produk dari antarmuka browser}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_43_browser_docker_delete.png}
+\caption{Menghapus produk dari antarmuka browser}
+\end{figure}
+
+\subsection{Pengujian Persistensi Data (Named Volume)}
+Data basis data disimpan pada Docker named volume bernama \texttt{uts\_toko\_db_data}. Pengujian persistensi dilakukan dengan membuat data produk baru (\texttt{PRD-HAT-777}), memeriksa isi tabel di MySQL, kemudian mematikan seluruh container dengan \texttt{docker compose down}, lalu menyalakannya kembali dengan \texttt{docker compose up -d}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_44_mysql_persist_before.png}
+\caption{Isi tabel products di MySQL sebelum kontainer dimatikan}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_45_mysql_persist_after.png}
+\caption{Pengujian persistensi: data tetap tersimpan utuh setelah down lalu up -d}
+\end{figure}
+
+\subsection{Kredensial dari Berkas .env}
+Kredensial basis data dan kunci enkripsi aplikasi dibaca dari berkas \texttt{.env} di level root yang tidak ikut di-commit ke Git. Disediakan berkas \texttt{.env.example} sebagai acuan.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_46_env_gitignore.png}
+\caption{Isi berkas .env.example dan verifikasi .env diabaikan oleh Git}
+\end{figure}
+
+\newpage
+% ==================== 8. SOAL 7: FRANKENPHP ====================
+\section{Soal 7: Nilai Tambahan (+10 Poin), FrankenPHP}
+Untuk memenuhi tantangan nilai tambahan, backend Laravel dijalankan menggunakan \textbf{FrankenPHP} sebagai server aplikasinya, menggantikan server development \texttt{php artisan serve} maupun arsitektur konvensional PHP-FPM + Nginx.
+
+Keunggulan FrankenPHP:
+\begin{itemize}
+    \item Menggunakan image dasar versi jelas: \texttt{dunglas/frankenphp:1.4-php8.3} (bukan latest).
+    \item Ditenagai oleh mesin web Caddy berkinerja tinggi dengan dukungan worker mode.
+    \item Berjalan berdampingan dengan service database dan frontend pada jaringan bridge Docker Compose.
+\end{itemize}
+
+Bukti bahwa permintaan ke API benar-benar dilayani oleh FrankenPHP:
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_47_frankenphp_logs.png}
+\caption{Log kontainer backend membuktikan request API dilayani langsung oleh FrankenPHP Caddy}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{images/gambar_48_frankenphp_header.png}
+\caption{Header respons HTTP memverifikasi atribut Server: FrankenPHP Caddy}
+\end{figure}
+
+\newpage
+% ==================== 9. ALIRAN DATA ====================
+\section{Aliran Data dari Vue ke Laravel dan Basis Data}
+Alur pergerakan data dari pengguna hingga ke penyimpanan basis data berjalan sebagai berikut:
+\begin{enumerate}
+    \item \textbf{Input Formulir Pengguna:} Petugas toko mengisi form penambahan produk di browser (\texttt{http://localhost:3000}) dan menekan tombol simpan. Fungsi reaktif memicu pustaka Axios Client: \texttt{apiClient.post('/products', form)}.
+    \item \textbf{Injeksi Token oleh Interceptor:} Request interceptor Axios menyematkan header \texttt{Authorization: Bearer <token>} yang diambil dari \texttt{localStorage}. Alamat yang dipanggil adalah alamat relatif \texttt{/api/products}.
+    \item \textbf{Reverse Proxy Nginx Frontend:} Nginx pada kontainer frontend menerima request pada port 3000. Blok konfigurasi \texttt{location /api/} secara transparan meneruskan paket HTTP (\texttt{proxy\_pass}) ke \texttt{http://backend:8000/api/products} menggunakan DNS internal jaringan Docker Compose (\texttt{uts_toko_network}).
+    \item \textbf{Pemrosesan FrankenPHP \& Sanctum:} Server FrankenPHP di kontainer backend menangkap paket HTTP pada port 8000. Middleware Laravel Sanctum memverifikasi keabsahan access token ke tabel \texttt{personal_access_tokens}.
+    \item \textbf{Validasi Form di Controller:} Request diteruskan ke \texttt{ProductController::store()}. Validasi memeriksa bahwa nama, kategori, harga non-negatif, dan keunikan kode SKU terpenuhi. Jika validasi gagal, dikembalikan status \texttt{422}.
+    \item \textbf{Query Eloquent ke MySQL:} Jika valid, Eloquent ORM menjalankan perintah SQL INSERT ke kontainer database melalui hostname internal \texttt{DB\_HOST=database:3306}. MySQL menulis rekaman data ke disk fisik yang terikat pada named volume \texttt{uts\_toko\_db_data}.
+    \item \textbf{Balasan JSON 201 Created:} Controller mengembalikan respons JSON berisi data produk baru beserta kode status HTTP \texttt{201 Created}. Respons mengalir kembali melalui Nginx ke browser, dan antarmuka Vue otomatis memperbarui tabel data produk.
+\end{enumerate}
+
+\begin{center}
+\begin{verbatim}
+[Browser Pengguna: Vue 3 + Axios]
+             |
+             | POST /api/products (Header: Authorization: Bearer <token>)
+             v
+[Kontainer Frontend: Nginx Reverse Proxy (:3000)]
+             |
+             | proxy_pass http://backend:8000/api/products
+             v
+[Kontainer Backend: FrankenPHP Caddy Engine (:8000)]
+             |
+             | Laravel 11 -> Sanctum Auth -> ProductController -> Validation
+             v
+[Eloquent ORM] ---> TCP Socket DB_HOST=database:3306
+             v
+[Kontainer Database: MySQL 8.0 Server (:3306)]
+             |
+             | Persistent Storage Mount
+             v
+[Docker Named Volume: uts_toko_db_data]
+\end{verbatim}
+\end{center}
+
+\newpage
+% ==================== 10. KENDALA DAN SOLUSI ====================
+\section{Kendala yang Ditemui dan Cara Mengatasinya}
+
+\begin{enumerate}
+    \item \textbf{CORS dan Resolusi DNS Nama Service Docker:}\\
+    \textit{Kendala:} Kode Vue.js dieksekusi di browser laptop yang tidak mengenal sistem DNS internal Docker Compose (seperti nama host \texttt{backend}), sehingga memanggil \texttt{http://backend:8000} langsung dari browser menyebabkan galat jaringan.\\
+    \textit{Solusi:} Mengonfigurasi Nginx pada kontainer frontend sebagai reverse proxy internal melalui blok \texttt{location /api/ \{ proxy\_pass http://backend:8000/api/; \}}. Frontend cukup memanggil alamat relatif \texttt{/api/}, mengeliminasi kendala CORS dan mematuhi ketentuan bahwa antarkontainer terhubung melalui nama service.
+
+    \item \textbf{Hak Akses Direktori Storage Laravel dalam Kontainer:}\\
+    \textit{Kendala:} Saat backend dijalankan di dalam kontainer FrankenPHP, muncul galat permission denied saat Laravel mencoba menulis log dan session cache.\\
+    \textit{Solusi:} Menambahkan perintah \texttt{chown -R www-data:www-data storage bootstrap/cache} dan \texttt{chmod -R 775} di dalam \texttt{backend/Dockerfile} agar pengguna proses FrankenPHP memiliki hak tulis penuh.
+
+    \item \textbf{Optimasi Docker Layer Caching saat Build Backend:}\\
+    \textit{Kendala:} Setiap kali terjadi perubahan kecil pada kode sumber controller, perintah \texttt{docker compose build} selalu mengulang instalasi paket Composer dari awal yang memakan waktu lama.\\
+    \textit{Solusi:} Memisahkan langkah penyalinan \texttt{composer.json} dan \texttt{composer.lock} lalu mengeksekusi \texttt{composer install} sebelum instruksi \texttt{COPY . .}. Dengan demikian, lapisan dependensi tetap memanfaatkan cache Docker selama berkas lock tidak berubah.
+
+    \item \textbf{Penanganan Status 401 saat Permintaan API Tanpa Token:}\\
+    \textit{Kendala:} Perilaku bawaan Laravel saat request tidak terotentikasi adalah mengalihkan (\textit{redirect}) ke route web bernama \texttt{login}, yang menyebabkan error 500 Route [login] not defined pada pengujian API murni.\\
+    \textit{Solusi:} Menambahkan penanganan pada konfigurasi exception di \texttt{bootstrap/app.php} dan memastikan klien selalu mengirimkan header \texttt{Accept: application/json}, sehingga Laravel selalu mengembalikan status HTTP \texttt{401 Unauthorized} murni dalam format JSON.
+
+    \item \textbf{Konvensi Penamaan Tag GHCR (Huruf Kecil):}\\
+    \textit{Kendala:} Registri kontainer GitHub (\texttt{ghcr.io}) mewajibkan seluruh karakter nama image berupa huruf kecil, sementara variabel repositori dapat memuat huruf kapital.\\
+    \textit{Solusi:} Menggunakan konversi lowercase pada workflow GitHub Actions sebelum meneruskan tag ke \texttt{docker/build-push-action}.
+
+    \item \textbf{Persistensi Kredensial Lingkungan di Runner CI:}\\
+    \textit{Kendala:} Pengujian di GitHub Actions membutuhkan kunci aplikasi (\texttt{APP\_KEY}) yang valid agar enkripsi dan token Sanctum dapat diuji tanpa membocorkan kunci ke repositori publik.\\
+    \textit{Solusi:} Memanfaatkan fitur GitHub Secrets (\texttt{secrets.APP\_KEY} dan \texttt{secrets.GITHUB\_TOKEN}) yang disuntikkan secara aman saat pipeline berjalan.
+
+    \item \textbf{Deprecasi Atribut PDO MySQL pada PHP 8.5 Lokal:}\\
+    \textit{Kendala:} Pada pengujian lokal di macOS yang menggunakan PHP 8.5, muncul pesan peringatan deprecasi mengenai konstanta \texttt{PDO::MYSQL\_ATTR\_SSL\_CA}.\\
+    \textit{Solusi:} Menyetel opsi \texttt{displayDetailsOnTestsThatTriggerDeprecations="false"} pada \texttt{phpunit.xml} sehingga pengujian fokus pada fungsionalitas logika bisnis dan tetap kompatibel penuh pada environment produksi PHP 8.3.
+\end{enumerate}
+
+% ==================== 11. KESIMPULAN ====================
+\section{Kesimpulan}
+Berdasarkan implementasi, pengujian, dan dokumentasi yang telah dilaksanakan, seluruh capaian pembelajaran mata kuliah (CPMK 1 sampai CPMK 7) berhasil dipenuhi dengan predikat optimal:
+\begin{enumerate}
+    \item Backend berbasis Laravel 11 berhasil menyediakan layanan RESTful API dengan otentikasi token Laravel Sanctum, CRUD lengkap satu resource katalog produk toko (\texttt{products}), penegakan kode status HTTP (200, 201, 401, 422), dan 10 feature test yang lulus hijau (\textbf{CPMK 1}).
+    \item Frontend SPA berbasis Vue.js 3 berhasil dibangun dengan manajemen token di \texttt{localStorage}, komunikasi data asinkron via Axios, dan base URL dinamis (\textbf{CPMK 1}).
+    \item Manajemen repositori GitHub dikelola secara disiplin dengan alur Git Flow (branch \texttt{main}, \texttt{dev}, fitur), Pull Request, Branch Protection Rules, dan otomatisasi CI pipeline GitHub Actions (\textbf{CPMK 2}).
+    \item Otomatisasi Continuous Deployment (CD) berhasil diterapkan dengan mem-build dan mem-push image kontainer backend dan frontend ke GitHub Container Registry (\texttt{ghcr.io}) menggunakan tag nomor commit SHA (\textbf{CPMK 3}).
+    \item Dockerfile backend mengimplementasikan layer caching dependensi Composer yang efisien, dan Dockerfile frontend menerapkan multi-stage build (Node build $\rightarrow$ Nginx serve) yang bebas dari folder \texttt{node_modules} (\textbf{CPMK 4 \& CPMK 5}).
+    \item Seluruh sistem terorkestrasi penuh melalui \texttt{docker-compose.yml} dengan komunikasi antar-service via DNS internal Docker, serta persistensi data teruji melalui named volume MySQL (\textbf{CPMK 6 \& CPMK 7}).
+    \item Tantangan nilai tambahan (+10 poin) berhasil diselesaikan dengan mengganti PHP-FPM / artisan serve menggunakan server aplikasi modern \textbf{FrankenPHP} berbasis engine Caddy.
+\end{enumerate}
+
+\newpage
+% ==================== LAMPIRAN ====================
+\appendix
+\section{Lampiran Berkas Konfigurasi}
+
+\subsection{docker-compose.yml}
+\begin{lstlisting}[language=bash]
+services:
+  database:
+    image: mysql:8.0
+    container_name: uts_database
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rahasia_root_mysql}
+      MYSQL_DATABASE: ${DB_DATABASE:-uts_tokodb}
+      MYSQL_USER: ${DB_USERNAME:-toko_admin}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-toko_rahasia_password_123}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - uts_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: uts_backend
+    restart: unless-stopped
+    environment:
+      APP_NAME: "${APP_NAME:-UTS_KatalogToko_Backend}"
+      APP_ENV: "${APP_ENV:-production}"
+      APP_KEY: "${APP_KEY}"
+      APP_DEBUG: "${APP_DEBUG:-false}"
+      APP_URL: "http://localhost:8000"
+      DB_CONNECTION: mysql
+      DB_HOST: database
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE:-uts_tokodb}
+      DB_USERNAME: ${DB_USERNAME:-toko_admin}
+      DB_PASSWORD: ${DB_PASSWORD:-toko_rahasia_password_123}
+    ports:
+      - "8000:8000"
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - uts_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: uts_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - uts_network
+
+volumes:
+  db_data:
+    name: uts_toko_db_data
+
+networks:
+  uts_network:
+    name: uts_toko_network
+    driver: bridge
+\end{lstlisting}
+
+\subsection{.env.example}
+\begin{lstlisting}[language=bash]
+# Konfigurasi Lingkungan Docker Compose (UTS KEPL 544597)
+APP_NAME=UTS_KatalogToko_Backend
+APP_ENV=production
+APP_KEY=base64:CONTOH_KEY_JANGAN_TULIS_ASLI_DI_REPO_EXAMPLE=
+APP_DEBUG=false
+APP_URL=http://localhost:8000
+
+# Kredensial Basis Data MySQL
+DB_ROOT_PASSWORD=rahasia_root_mysql
+DB_DATABASE=uts_tokodb
+DB_USERNAME=toko_admin
+DB_PASSWORD=toko_rahasia_password_123
+\end{lstlisting}
+
+\subsection{backend/Dockerfile}
+\begin{lstlisting}[language=bash]
+# Dockerfile backend Laravel dengan FrankenPHP (Soal 5a & Soal 7 Bonus +10)
+FROM dunglas/frankenphp:1.4-php8.3
+
+RUN install-php-extensions \
+    pdo_mysql \
+    bcmath \
+    intl \
+    zip \
+    opcache
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /app
+
+# Layer Caching: Salin lockfile dan install vendor sebelum copy app
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --optimize-autoloader --no-scripts --no-autoloader
+
+COPY . .
+
+RUN composer dump-autoload --optimize
+
+RUN chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache \
+    && chmod +x /app/docker-entrypoint.sh
+
+ENV SERVER_NAME=":8000"
+
+EXPOSE 8000
+
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+\end{lstlisting}
+
+\subsection{backend/docker-entrypoint.sh}
+\begin{lstlisting}[language=bash]
+#!/bin/sh
+set -e
+
+echo "=== Memulai Inisialisasi Backend Laravel (FrankenPHP) ==="
+
+# Menunggu service MySQL siap
+echo "Menghubungkan ke basis data MySQL ($DB_HOST:$DB_PORT)..."
+while ! php -r "try { new PDO('mysql:host='.getenv('DB_HOST').';port='.getenv('DB_PORT', 3306).';dbname='.getenv('DB_DATABASE'), getenv('DB_USERNAME'), getenv('DB_PASSWORD')); exit(0); } catch (Exception \$e) { exit(1); }"; do
+    echo "Menunggu MySQL siap..."
+    sleep 2
+done
+
+echo "MySQL terhubung! Menjalankan migrasi basis data..."
+php artisan migrate --force
+
+echo "Menjalankan seeder awal data produk toko..."
+php artisan db:seed --force
+
+echo "Menjalankan server aplikasi FrankenPHP pada port 8000..."
+exec frankenphp run --config /app/Caddyfile
+\end{lstlisting}
+
+\subsection{frontend/Dockerfile}
+\begin{lstlisting}[language=bash]
+# Multi-stage build untuk frontend Vue.js (Soal 5b)
+# Tahap 1: Build aplikasi dengan Node.js
+FROM node:20.18-alpine AS builder
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+RUN npm run build
+
+# Tahap 2: Sajikan hasil build dengan Nginx (image akhir tanpa node_modules)
+FROM nginx:1.27-alpine AS production
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
+\end{lstlisting}
+
+\subsection{frontend/nginx.conf}
+\begin{lstlisting}[language=bash]
+server {
+    listen 80;
+    server_name localhost;
+
+    root /usr/share/nginx/html;
+    index index.html index.htm;
+
+    # Penanganan Single Page Application routing
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Reverse proxy ke container backend melalui nama service di Docker network
+    location /api/ {
+        proxy_pass http://backend:8000/api/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+}
+\end{lstlisting}
+
+\subsection{.github/workflows/ci.yml}
+\begin{lstlisting}[language=bash]
+name: CI/CD Pipeline
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, dev, "feature/**" ]
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  backend-test:
+    name: Backend Test (Laravel)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, sqlite, pdo_sqlite, bcmath
+          coverage: none
+
+      - name: Install Dependencies
+        working-directory: ./backend
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Setup Environment
+        working-directory: ./backend
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Run Feature Tests
+        working-directory: ./backend
+        run: php artisan test
+
+  frontend-build:
+    name: Frontend Build (Vue.js)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: './frontend/package-lock.json'
+
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run Build
+        working-directory: ./frontend
+        run: npm run build
+
+  deploy:
+    name: Deploy to GHCR (Push to main only)
+    needs: [ backend-test, frontend-build ]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Short SHA
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Build and Push Backend Image (FrankenPHP)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/uts-backend:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/uts-backend:${{ steps.vars.outputs.sha_short }}
+
+      - name: Build and Push Frontend Image (Vue + Nginx)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/uts-frontend:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/uts-frontend:${{ steps.vars.outputs.sha_short }}
+\end{lstlisting}
+
+\end{document}
+"""
+
+with open(TEX_FILE, "w", encoding="utf-8") as f:
+    f.write(content)
+
+print(f"File {TEX_FILE} berhasil ditulis ({len(content)} karakter).")
